@@ -1,10 +1,14 @@
-html, body, #root {
+html,
+body,
+#root {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
-  background-color: #f4f4f7; 
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f4f4f7;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
   overflow: hidden;
 }
 
@@ -21,7 +25,7 @@ html, body, #root {
   background-color: #ffffff;
   padding: 35px;
   border-radius: 12px;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08); /* Sombra elegante */
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
   text-align: center;
   width: 100%;
   max-width: 400px;
@@ -32,7 +36,7 @@ html, body, #root {
 }
 
 .brasao-img {
-  width: 160px; 
+  width: 160px;
   height: auto;
   margin-bottom: 30px;
 }
@@ -73,7 +77,7 @@ html, body, #root {
 }
 
 .btn-enigma {
-  background-color: #d61c22; /* Vermelho SESI */
+  background-color: #d61c22;
   color: white;
   border: none;
   padding: 12px 20px;
@@ -94,13 +98,15 @@ html, body, #root {
   font-weight: bold;
 }
 
-.feedback.erro { color: #d61c22; }
+.feedback.erro {
+  color: #d61c22;
+}
 
 .lupa-btn {
   position: absolute;
   bottom: 25px;
   right: 25px;
-  background-color: #fadb14; /* Amarelo chamativo */
+  background-color: #fadb14;
   border: 1px solid #ffec3d;
   font-size: 22px;
   cursor: pointer;
@@ -111,7 +117,9 @@ html, body, #root {
   justify-content: center;
   align-items: center;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  transition: transform 0.2s, background-color 0.2s;
+  transition:
+    transform 0.2s,
+    background-color 0.2s;
   z-index: 20;
 }
 
@@ -123,12 +131,12 @@ html, body, #root {
 .dica-lateral {
   position: absolute;
   bottom: 25px;
-  right: 85px; /* Posicionada de lado em relação à lupa */
+  right: 85px;
   background-color: #fffde7;
   border: 1px solid #fff59d;
   padding: 12px 18px;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   max-width: 260px;
   font-size: 13px;
   color: #5d4037;
@@ -179,4 +187,62 @@ html, body, #root {
   font-size: 2rem !important;
   font-weight: bold;
   color: #d61c22;
+}
+
+/* Tremor ao errar */
+
+.shake {
+  animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+
+  10% {
+    transform: translateX(-12px);
+  }
+
+  20% {
+    transform: translateX(12px);
+  }
+
+  30% {
+    transform: translateX(-10px);
+  }
+
+  40% {
+    transform: translateX(10px);
+  }
+
+  50% {
+    transform: translateX(-8px);
+  }
+
+  60% {
+    transform: translateX(8px);
+  }
+
+  70% {
+    transform: translateX(-5px);
+  }
+
+  80% {
+    transform: translateX(5px);
+  }
+
+  90% {
+    transform: translateX(-2px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.btn-enigma:disabled,
+.input-enigma:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
