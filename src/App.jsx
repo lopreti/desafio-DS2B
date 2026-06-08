@@ -19,9 +19,7 @@ export default function App() {
       "color: #d61c22; font-size: 14px; font-weight: bold;",
     );
 
-    console.log(
-      "Vocês estão no lugar certo! Agora inspecionem a árvore de elementos do HTML (aba Elements) para encontrar a chave sagrada.",
-    );
+    console.log("Vocês estão no lugar certo!");
   }, []);
 
   const checarSenha = () => {
@@ -127,6 +125,12 @@ export default function App() {
               className="input-enigma"
               autoComplete="off"
               disabled={bloqueado || venceu}
+            />
+
+            <input
+              type="hidden"
+              id="dica-secreta"
+              value="A resposta está mais perto do console do que você imagina..."
             />
 
             <button
