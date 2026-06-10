@@ -1,43 +1,55 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./App.css";
-import brasaoCapivara from "/capivarabrasao.png";
-import SearchIcon from "@mui/icons-material/Search";
 import Confetti from "react-confetti";
 
 export default function App() {
-  const [senha, setSenha] = useState("");
-  const [status, setStatus] = useState({ msg: "", tipo: "" });
-  const [mostrarDica, setMostrarDica] = useState(false);
-  const [venceu, setVenceu] = useState(false);
-  const [bloqueado, setBloqueado] = useState(false);
+  const perguntas = [
+    {
+      pergunta: "Qual comando cria um novo projeto Node.js?",
+      alternativas: ["npm install", "npm init", "node start", "npm create"],
+      correta: 1,
+      fragmento: "67",
+    },
+    {
+      pergunta:
+        "Qual Hook é usado para armazenar estado em um componente React?",
+      alternativas: ["useEffect", "useRef", "useState", "useMemo"],
+      correta: 2,
+      fragmento: "sx",
+    },
+    {
+      pergunta: "Qual atributo substitui 'class' em JSX?",
+      alternativas: ["cssClass", "styleClass", "jsxClass", "className"],
+      correta: 3,
+      fragmento: "69",
+    },
+  ];
+
+  const [indice, setIndice] = useState(0);
+  const [selecionada, setSelecionada] = useState(null);
+  const [fragmentos, setFragmentos] = useState([]);
+  const [finalizado, setFinalizado] = useState(false);
+
   const [shake, setShake] = useState(false);
-  const [contador, setContador] = useState(0);
+  const [bloqueado, setBloqueado] = useState(false);
+  const [tempoRestante, setTempoRestante] = useState(0);
+  const [tentativasErradas, setTentativasErradas] = useState(0);
 
-  useEffect(() => {
-    console.log(
-      "%c⚠️ ATENÇÃO INTEGRANTES DA CASA CAPIVARA:",
-      "color: #d61c22; font-size: 14px; font-weight: bold;",
-    );
-
-    console.log("Vocês estão no lugar certo!");
-  }, []);
-
-  const checarSenha = () => {
+  const verificarResposta = () => {
     if (bloqueado) return;
+    if (selecionada === null) return;
 
-    const chave = "capivariasUnidas2026";
+    const atual = perguntas[indice];
 
-    if (senha.trim() === chave) {
-      setStatus({
-        msg: "",
-        tipo: "sucesso",
-      });
+    if (selecionada === atual.correta) {
+      setFragmentos((prev) => [...prev, atual.fragmento]);
 
-      setVenceu(true);
-
-      setTimeout(() => {
-        setVenceu(false);
-      }, 20000);
+      if (indice < perguntas.length - 1) {
+        setIndice((prev) => prev + 1);
+        setSelecionada(null);
+      } else {
+        setFinalizado(true);
+      }
     } else {
       setShake(true);
 
@@ -45,130 +57,121 @@ export default function App() {
         setShake(false);
       }, 500);
 
+      const novosErros = tentativasErradas + 1;
+
+      setTentativasErradas(novosErros);
+
+      const tempoBloqueio = novosErros * 3;
+
       setBloqueado(true);
-      setContador(3);
+      setTempoRestante(tempoBloqueio);
 
-      setStatus({
-        msg: "Chave incorreta. Tente novamente em 3s",
-        tipo: "erro",
-      });
-
-      const interval = setInterval(() => {
-        setContador((prev) => {
-          const novoValor = prev - 1;
-
-          if (novoValor > 0) {
-            setStatus({
-              msg: ` Chave incorreta. Tente novamente em ${novoValor}s`,
-              tipo: "erro",
-            });
-
-            return novoValor;
+      const intervalo = setInterval(() => {
+        setTempoRestante((tempo) => {
+          if (tempo <= 1) {
+            clearInterval(intervalo);
+            setBloqueado(false);
+            return 0;
           }
 
-          clearInterval(interval);
-
-          setBloqueado(false);
-
-          setStatus({
-            msg: "",
-            tipo: "",
-          });
-
-          return 0;
+          return tempo - 1;
         });
       }, 1000);
     }
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    checarSenha();
-  };
-
-  return (
-    <div className="wrapper">
-      {venceu && (
+  if (finalizado) {
+    return (
+      <>
         <Confetti
           width={window.innerWidth}
           height={window.innerHeight}
           recycle={true}
           numberOfPieces={1200}
-          gravity={0.45}
-          initialVelocityX={20}
-          initialVelocityY={20}
-          run={venceu}
-        />
-      )}
-
-      <div className={`card ${shake ? "shake" : ""}`}>
-        <img
-          src={brasaoCapivara}
-          alt="Brasão Casa Capivara"
-          className="brasao-img"
+          gravity={0.35}
         />
 
-        <form className="form-enigma" onSubmit={handleSubmit}>
-          <input
-            type="email"
-            value="casaCapivara@sesi.com.br"
-            disabled
-            className="input-enigma input-disabled"
-          />
+        <div className="tela-vitoria">
+          <h1>🎉 PARABÉNS 🎉</h1>
 
-          <div className="input-group-row">
-            <input
-              type="text"
-              placeholder="Senha de acesso..."
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-              className="input-enigma"
-              autoComplete="off"
-              disabled={bloqueado || venceu}
-            />
+          <p>Vocês concluíram todos os desafios!</p>
 
-            <input
-              type="hidden"
-              id="dica-secreta"
-              value="A resposta está mais perto do console do que você imagina..."
-            />
+          <div className="senha-final">
+            <h3>Senha Liberada!</h3>
 
-            <button
-              type="submit"
-              className="btn-enigma"
-              disabled={bloqueado || venceu}
-            >
-              {bloqueado ? contador : "OK"}
-            </button>
+            <div className="lista-fragmentos">
+              <span>67</span>
+              <span>sx</span>
+              <span>69</span>
+            </div>
+
+            <h3>
+              Volte para a sala inicial e desbloqueie o notebook da sua equipe...
+            </h3>
+
+            <div className="senha">67sx69</div>
           </div>
-        </form>
+        </div>
+      </>
+    );
+  }
 
-        {status.msg && (
-          <span className={`feedback ${status.tipo}`}>{status.msg}</span>
+  return (
+    <div className="wrapper">
+      <div className={`card ${shake ? "shake" : ""}`}>
+        <h2 className="titulo">Quiz Node/React</h2>
+
+        <div className="contador">
+          Pergunta {indice + 1} de {perguntas.length}
+        </div>
+
+        <p className="pergunta">{perguntas[indice].pergunta}</p>
+
+        <div className="alternativas">
+          {perguntas[indice].alternativas.map((alt, i) => (
+            <button
+              key={i}
+              disabled={bloqueado}
+              className={`alternativa ${
+                selecionada === i ? "selecionada" : ""
+              }`}
+              onClick={() => setSelecionada(i)}
+            >
+              {String.fromCharCode(65 + i)}) {alt}
+            </button>
+          ))}
+        </div>
+
+        {bloqueado && (
+          <div className="bloqueio">
+            Tente novamente em: 
+          </div>
+        )}
+
+        <button
+          className="btn-enigma"
+          onClick={verificarResposta}
+          disabled={bloqueado}
+        >
+          {bloqueado
+            ? `${tempoRestante}s`
+            : "Confirmar Resposta"}
+        </button>
+
+        {fragmentos.length > 0 && (
+          <div className="fragmentos">
+            <h4>🔓 Fragmentos encontrados</h4>
+
+            <div className="fragmentos-lista">
+              {fragmentos.map((frag, index) => (
+                <span key={index} className="fragmento">
+                  {frag}
+                </span>
+              ))}
+            </div>
+          </div>
         )}
       </div>
-
-      <button
-        className="lupa-btn"
-        onClick={() => setMostrarDica(!mostrarDica)}
-        title="Dica"
-      >
-        <SearchIcon
-          sx={{
-            fontSize: 32,
-            color: "#272323bd",
-          }}
-        />
-      </button>
-
-      {mostrarDica && (
-        <div className="dica-lateral">
-          <p>
-            💡 <strong>Dica:</strong> O verdadeiro desenvolvedor enxerga através
-            da estrutura. <strong>Inspecione</strong> bem a página...
-          </p>
-        </div>
-      )}
     </div>
   );
 }
